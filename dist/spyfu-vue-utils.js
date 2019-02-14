@@ -22,7 +22,53 @@
       });
     }
 
+    var timeouts = [];
+    /**
+     * Bind setTimeout() call to a component.
+     *
+     * @param {Vue}         vm          component managing the timeout
+     * @param {Function}    callback    function to execute
+     * @param {Number}      md          timeout duration in milliseconds
+     */
+
+    function componentTimeout(vm, callback, ms) {
+      var componentTimeouts = timeouts.find(function (obj) {
+        return obj.vm === vm;
+      });
+
+      if (!componentTimeouts) {
+        componentTimeouts = {
+          vm: vm,
+          timeouts: []
+        };
+        timeouts.push(componentTimeouts);
+        vm.$once('hook:destroyed', function () {
+          componentTimeouts.timeouts.forEach(clearTimeout);
+          timeouts = timeouts.filter(function (obj) {
+            return obj.vm !== vm;
+          });
+        });
+      }
+
+      var id = setTimeout(function () {
+        callback();
+
+        if (componentTimeouts) {
+          var index = componentTimeouts.timeouts.findIndex(function (pendingId) {
+            return pendingId === id;
+          });
+
+          if (index > -1) {
+            componentTimeouts.timeouts.splice(index, 1);
+          }
+        }
+      }, ms);
+      componentTimeouts.timeouts.push(id);
+      return id;
+    }
+
     exports.bindExternalEvent = bindExternalEvent;
+    exports.componentTimeout = componentTimeout;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
