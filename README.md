@@ -2,6 +2,7 @@
 
 [![Build](https://img.shields.io/circleci/project/github/spyfu/spyfu-vue-utils/master.svg?style=flat)](https://circleci.com/gh/spyfu/spyfu-vue-utils)
 [![Dependencies](https://img.shields.io/david/dev/spyfu/spyfu-vue-utils.svg?style=flat)](https://david-dm.org/spyfu/spyfu-vue-utils?type=dev)
+[![Version](https://img.shields.io/npm/v/spyfu-vue-utils.svg?style=flat)](https://www.npmjs.com/package/spyfu-vue-utils)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/spyfu/spyfu-vue-utils/blob/master/LICENSE)
 
 Utility function for Vue components.
