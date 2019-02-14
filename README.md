@@ -38,7 +38,7 @@ new Vue({
     },
     methods: {
         tick() {
-            // this will be called every 50ms
+            // this will fire every 50ms until the component is destroyed
         },
     },
 });
@@ -53,11 +53,11 @@ import { componentTimeout } from 'spyfu-vue-utils';
 
 new Vue({
     created() {
-        componentTimeout(this, this.foo, 100);
+        componentTimeout(this, this.foo, 50);
     },
     methods: {
         foo() {
-            // this will fire after 100ms if the component has not been destroyed
+            // this will fire after 50ms if the component has not been destroyed
         },
     },
 });
