@@ -1,0 +1,1 @@
+{"version":3,"file":"spyfu-vue-utils.js","sources":["../src/bind_external_event.js"],"sourcesContent":["export default function bindExternalEvent() {\n    // ...\n}\n"],"names":["bindExternalEvent"],"mappings":";;;;;;IAAe,SAASA,iBAAT,GAA6B;IAE3C;;;;;;;;;;;;"}
