@@ -25,6 +25,25 @@ new Vue({
 });
 ```
 
+### componentInterval
+
+Executes a function at a given interval. The interval will be terminated when the component is destroyed, or when the returned stop function is called.
+
+```js
+import { componentInterval } from 'spyfu-vue-utils';
+
+new Vue({
+    created() {
+        componentInterval(this, this.tick, 50);
+    },
+    methods: {
+        tick() {
+            // this will be called every 50ms
+        },
+    },
+});
+```
+
 ### componentTimeout
 
 Executes a function after a specified amount of time.
