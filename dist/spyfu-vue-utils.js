@@ -22,6 +22,25 @@
       });
     }
 
+    /**
+     * Create an interval that is cleaned up when the component is destroyed.
+     * 
+     * @param  {Vue}        vm
+     * @param  {Function}   callback
+     * @param  {Number}     ms
+     * @return {Function}
+     */
+    function componentInterval(vm, callback, ms) {
+      var interval = setInterval(callback, ms);
+
+      var stop = function stop() {
+        return clearInterval(interval);
+      };
+
+      vm.$once('hook:destroyed', stop);
+      return stop;
+    }
+
     var timeouts = [];
     /**
      * Bind setTimeout() call to a component.
@@ -68,6 +87,7 @@
     }
 
     exports.bindExternalEvent = bindExternalEvent;
+    exports.componentInterval = componentInterval;
     exports.componentTimeout = componentTimeout;
 
     Object.defineProperty(exports, '__esModule', { value: true });

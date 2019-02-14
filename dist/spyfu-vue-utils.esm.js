@@ -16,6 +16,25 @@ function bindExternalEvent(vm, targetEl) {
   });
 }
 
+/**
+ * Create an interval that is cleaned up when the component is destroyed.
+ * 
+ * @param  {Vue}        vm
+ * @param  {Function}   callback
+ * @param  {Number}     ms
+ * @return {Function}
+ */
+function componentInterval(vm, callback, ms) {
+  var interval = setInterval(callback, ms);
+
+  var stop = function stop() {
+    return clearInterval(interval);
+  };
+
+  vm.$once('hook:destroyed', stop);
+  return stop;
+}
+
 var timeouts = [];
 /**
  * Bind setTimeout() call to a component.
@@ -61,5 +80,5 @@ function componentTimeout(vm, callback, ms) {
   return id;
 }
 
-export { bindExternalEvent, componentTimeout };
+export { bindExternalEvent, componentInterval, componentTimeout };
 //# sourceMappingURL=spyfu-vue-utils.esm.js.map
