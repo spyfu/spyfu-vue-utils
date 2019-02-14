@@ -2,20 +2,26 @@ import Vue from 'vue';
 import { componentInterval } from '../src/index';
 
 test('componentInterval', done => {
-    const tick = jest.fn();
+    let count = 0;
 
-    const vm = new Vue({
-        created() {
-            componentInterval(this, tick, 20);
-        },
+    const tick = jest.fn(vm => {
+        count++;
+
+        if (count === 2) {
+            vm.$destroy();
+        }
     });
 
-    // destroy our vm after 50ms
-    setTimeout(() => vm.$destroy(), 50);
+    new Vue({
+        created() {
+            componentInterval(this, () => tick(this), 20);
+        },
+    });
 
     setTimeout(() => {
         // tick should have been called twice
         expect(tick).toHaveBeenCalledTimes(2);
+        
         done();
     }, 100);
 });
