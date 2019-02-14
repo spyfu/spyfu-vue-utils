@@ -5,7 +5,11 @@
 [![Version](https://img.shields.io/npm/v/spyfu-vue-utils.svg?style=flat)](https://www.npmjs.com/package/spyfu-vue-utils)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/spyfu/spyfu-vue-utils/blob/master/LICENSE)
 
-Utility function for Vue components.
+Utility functions for Vue components.
+
+- [`bindExternalEvent`](#bindexternalevent)
+- [`componentInterval`](#componentinterval)
+- [`componentTimeout`](#componenttimeout)
 
 ### bindExternalEvent
 
@@ -63,3 +67,9 @@ new Vue({
     },
 });
 ```
+
+### License
+
+[MIT](https://github.com/spyfu/spyfu-vue-utils/blob/master/LICENSE)
+
+Copyright (c) 2019-present, SpyFu
