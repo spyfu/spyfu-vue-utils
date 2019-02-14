@@ -9,9 +9,7 @@ jobs:
           key: -v3-{{ checksum "yarn.lock" }}
       - run: 
           name: Install dependencies
-          command: |
-            cd ~/project/Main/Nacho.Web
-            yarn
+          command: yarn
       - save_cache:
           key: -v3-{{ checksum "yarn.lock" }}
           paths:
