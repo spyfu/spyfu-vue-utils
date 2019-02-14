@@ -20,7 +20,7 @@ import { bindExternalEvent } from 'spyfu-vue-utils';
 
 new Vue({
     created() {
-        bindExternalEvent(this, document.body, this.onClick);
+        bindExternalEvent(this, document.body, 'click', this.onClick);
     },
     methods: {
         onClick(e) {
