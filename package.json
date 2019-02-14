@@ -7,8 +7,10 @@
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.3.1",
+    "jest": "^24.1.0",
     "rollup": "^1.1.2",
-    "rollup-plugin-babel": "^4.3.2"
+    "rollup-plugin-babel": "^4.3.2",
+    "vue": "^2.6.6"
   },
   "homepage": "https://github.com/spyfu/spyfu-vue-utils#readme",
   "keywords": [
@@ -25,7 +27,7 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "version": "0.1.0"
 }
