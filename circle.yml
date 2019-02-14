@@ -20,3 +20,8 @@ jobs:
       - run:
           name: Test
           command: yarn test
+workflows:
+  version: 2
+  tests:
+    jobs:
+      - test
