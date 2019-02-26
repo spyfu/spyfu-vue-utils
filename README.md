@@ -12,30 +12,22 @@ Utility functions for Vue components.
 - [`componentInterval`](#componentinterval)
 - [`componentTimeout`](#componenttimeout)
 
-### Exposing helpers globally
+### Installation
 
-To expose these helpers to all plugins, you can install them as a plugin.
+The recommended way to install these utility functions is through a package manager.
 
-```js
-import Vue from 'vue';
-import { SpyfuVueUtils } from 'spyfu-vue-utils';
+```bash
+# install via npm
+$ npm install spyfu-vue-utils
 
-Vue.use(SpyfuVueUtils);
+# or install via yarn
+$ yarn add spyfu-vue-utils
 ```
 
-This will attach the helpers to the Vue prototype as `$bindExternalEvent`, `$interval`, and `$timeout`. The API for these functions will all remain the same, with the exception of not having to provide the `this` context as the first argument. As an example, here is `bindExternalEvent` being used to listen for a scroll event.
+Additionally, the utility functions can be pulled in through a CDN.
 
-```js
-new Vue({
-    created() {
-        this.$bindExternalEvent(window, 'scroll', this.onScroll);
-    },
-    methods: {
-        onScroll(e) {
-            // ...
-        },
-    },
-});
+```html
+<script src="https://raw.githubusercontent.com/spyfu/spyfu-vue-utils/master/dist/spyfu-vue-utils.min.js"></script>
 ```
 
 ### bindExternalEvent
@@ -97,6 +89,32 @@ new Vue({
     },
     methods: {
         fire() {
+            // ...
+        },
+    },
+});
+```
+
+### Exposing utility functions globally
+
+To expose these helpers to all plugins, you can install them as a plugin.
+
+```js
+import Vue from 'vue';
+import { SpyfuVueUtils } from 'spyfu-vue-utils';
+
+Vue.use(SpyfuVueUtils);
+```
+
+This will attach the helpers to the Vue prototype as `$bindExternalEvent`, `$interval`, and `$timeout`. The API for these functions will all remain the same, with the exception of not having to provide the `this` context as the first argument. As an example, here is `bindExternalEvent` being used to listen for a scroll event.
+
+```js
+new Vue({
+    created() {
+        this.$bindExternalEvent(window, 'scroll', this.onScroll);
+    },
+    methods: {
+        onScroll(e) {
             // ...
         },
     },
