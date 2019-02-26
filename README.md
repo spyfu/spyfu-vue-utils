@@ -33,18 +33,22 @@ new Vue({
 
 ### componentInterval
 
-Executes a function at a given interval. The interval will be terminated when the component is destroyed, or when the returned stop function is called.
+Executes a function at a given interval. The interval will be terminated when the component is destroyed, or when the returned `cancel` function is called.
 
 ```js
 import { componentInterval } from 'spyfu-vue-utils';
 
 new Vue({
     created() {
-        componentInterval(this, this.tick, 50);
+        const interval = componentInterval(this, this.tick, 100);
+
+        // our tick function will be called every 100ms, until the component is destroyed.
+        // for demo purposes though, we'll manually stop ticking after 5 seconds.
+        componentTimeout(this, interval.cancel, 5000);
     },
     methods: {
         tick() {
-            // this will fire every 50ms until the component is destroyed
+            // ...
         },
     },
 });

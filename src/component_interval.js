@@ -9,9 +9,9 @@
 export default function componentInterval(vm, callback, ms) {
     const interval = setInterval(callback, ms);
 
-    const stop = () => clearInterval(interval);
+    const cancel = () => clearInterval(interval);
     
-    vm.$once('hook:destroyed', stop);
+    vm.$once('hook:destroyed', cancel);
 
-    return stop;
+    return { cancel };
 }
