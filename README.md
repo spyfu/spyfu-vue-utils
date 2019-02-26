@@ -56,18 +56,22 @@ new Vue({
 
 ### componentTimeout
 
-Executes a function after a specified amount of time.
+Executes a function after a specified amount of time. The queued function will not be executed if the component is destroyed before before the given timeout, or when the returned `cancel` function is called.
 
 ```js
 import { componentTimeout } from 'spyfu-vue-utils';
 
 new Vue({
     created() {
-        componentTimeout(this, this.foo, 50);
+        const timeout = componentTimeout(this, this.fire, 5000);
+
+        // our fire function will be called after 5 seconds, so long as the component instance
+        // is still alive. for demo purposes though, we'll cancel the timeout after 2 seconds.
+        componentTimeout(this, timeout.cancel, 2000);
     },
     methods: {
-        foo() {
-            // this will fire after 50ms if the component has not been destroyed
+        fire() {
+            // ...
         },
     },
 });
