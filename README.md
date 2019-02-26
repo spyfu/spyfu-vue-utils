@@ -12,19 +12,45 @@ Utility functions for Vue components.
 - [`componentInterval`](#componentinterval)
 - [`componentTimeout`](#componenttimeout)
 
+### Exposing helpers globally
+
+To expose these helpers to all plugins, you can install them as a plugin.
+
+```js
+import Vue from 'vue';
+import { SpyfuVueUtils } from 'spyfu-vue-utils';
+
+Vue.use(SpyfuVueUtils);
+```
+
+This will attach the helpers to the Vue prototype as `$bindExternalEvent`, `$interval`, and `$timeout`. The API for these functions will all remain the same, with the exception of not having to provide the `this` context as the first argument. As an example, here is `bindExternalEvent` being used to listen for a scroll event.
+
+```js
+new Vue({
+    created() {
+        this.$bindExternalEvent(window, 'scroll', this.onScroll);
+    },
+    methods: {
+        onScroll(e) {
+            // ...
+        },
+    },
+});
+```
+
 ### bindExternalEvent
 
-Binds a listener to an element outside the scope of a component. This listener will be cleaned up when the component is destroyed.
+Binds a listener to something outside the scope of a component. This listener will be cleaned up when the component is destroyed.
 
 ```js
 import { bindExternalEvent } from 'spyfu-vue-utils';
 
 new Vue({
     created() {
-        bindExternalEvent(this, document.body, 'click', this.onClick);
+        bindExternalEvent(this, window, 'scroll', this.onBodyClick);
     },
     methods: {
-        onClick(e) {
+        onBodyClick(e) {
             // ...
         },
     },
