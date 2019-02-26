@@ -33,12 +33,14 @@
     function componentInterval(vm, callback, ms) {
       var interval = setInterval(callback, ms);
 
-      var stop = function stop() {
+      var cancel = function cancel() {
         return clearInterval(interval);
       };
 
-      vm.$once('hook:destroyed', stop);
-      return stop;
+      vm.$once('hook:destroyed', cancel);
+      return {
+        cancel: cancel
+      };
     }
 
     var timeouts = [];
@@ -51,6 +53,8 @@
      */
 
     function componentTimeout(vm, callback, ms) {
+      // track which timeouts are bound to our component, and when that
+      // it is destroyed make sure to cancel any lingering timeouts
       var componentTimeouts = timeouts.find(function (obj) {
         return obj.vm === vm;
       });
@@ -67,23 +71,36 @@
             return obj.vm !== vm;
           });
         });
-      }
+      } // once a timeout has been executed or canceled, remove it
+      // from our componentTimeouts that need to be cleaned up
 
-      var id = setTimeout(function () {
-        callback();
 
+      function removeTimeoutById(timeoutId) {
         if (componentTimeouts) {
           var index = componentTimeouts.timeouts.findIndex(function (pendingId) {
-            return pendingId === id;
+            return pendingId === timeoutId;
           });
 
           if (index > -1) {
             componentTimeouts.timeouts.splice(index, 1);
           }
         }
+      } // queue the timeout, and keep track of it so it can be cleaned up
+      // if the component is destroyed before this timeout is executed.
+
+
+      var id = setTimeout(function () {
+        callback();
+        removeTimeoutById(id);
       }, ms);
-      componentTimeouts.timeouts.push(id);
-      return id;
+      componentTimeouts.timeouts.push(id); // return a function to manually cancel up a timeout
+
+      return {
+        cancel: function cancel() {
+          clearTimeout(id);
+          removeTimeoutById(id);
+        }
+      };
     }
 
     exports.bindExternalEvent = bindExternalEvent;
