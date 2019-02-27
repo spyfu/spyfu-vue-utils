@@ -24,15 +24,35 @@ $ yarn add spyfu-vue-utils
 $ npm install spyfu-vue-utils
 ```
 
-Additionally, the utilities can be served via a CDN.
+### Plugin API
 
-```html
-<script src="https://raw.githubusercontent.com/spyfu/spyfu-vue-utils/master/dist/spyfu-vue-utils.min.js"></script>
+In addition to importing these utilities directly, they can made available to all Vue instances by installing them as a plugin.
+
+```js
+import Vue from 'vue';
+import { SpyfuVueUtils } from 'spyfu-vue-utils';
+
+Vue.use(SpyfuVueUtils);
 ```
 
-### bindExternalEvent
+This attaches the utilities to the Vue prototype as `$bindExternalEvent`, `$interval`, and `$timeout`. The API for these functions remains the same, with the exception of not having to provide a `this` context as the first argument. As an example, here is `bindExternalEvent` being used to listen for a body click event.
 
-Binds a listener to something outside the scope of a component. This listener will be cleaned up when the component is destroyed. In this example, we'll bind a listener to the window scroll event.
+```js
+new Vue({
+    created() {
+        this.$bindExternalEvent(document.body, 'click', this.onBodyClick);
+    },
+    methods: {
+        onBodyClick(e) {
+            // ...
+        },
+    },
+});
+```
+
+### `bindExternalEvent`
+
+Binds a listener to something outside the scope of a component. This listener will be cleaned up when the component is destroyed. In this example, we'll bind a listener to the window scroll event. To manually stop listening for an event, call the returned `unbind` function.
 
 ```js
 import { bindExternalEvent } from 'spyfu-vue-utils';
@@ -49,7 +69,7 @@ new Vue({
 });
 ```
 
-### componentInterval
+### `componentInterval`
 
 Executes a function at a given interval. The interval will be terminated when the component is destroyed, or when the returned `cancel` function is called.
 
@@ -72,7 +92,7 @@ new Vue({
 });
 ```
 
-### componentTimeout
+### `componentTimeout`
 
 Executes a function after a specified amount of time. The queued function will not be executed if the component is destroyed before before the given timeout, or when the returned `cancel` function is called.
 
@@ -89,32 +109,6 @@ new Vue({
     },
     methods: {
         fire() {
-            // ...
-        },
-    },
-});
-```
-
-### Plugin API
-
-In addition to being able to import these utilities directly, they can be exposed to all Vue instances if you prefer. To do this, simply install them as a plugin.
-
-```js
-import Vue from 'vue';
-import { SpyfuVueUtils } from 'spyfu-vue-utils';
-
-Vue.use(SpyfuVueUtils);
-```
-
-This attaches the utilities to the Vue prototype as `$bindExternalEvent`, `$interval`, and `$timeout`. The API for these functions remains the same, with the exception of not having to provide a `this` context as the first argument. As an example, here is `bindExternalEvent` being used to listen for a body click event.
-
-```js
-new Vue({
-    created() {
-        this.$bindExternalEvent(document.body, 'click', this.onBodyClick);
-    },
-    methods: {
-        onBodyClick(e) {
             // ...
         },
     },
