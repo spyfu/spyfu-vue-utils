@@ -8,7 +8,13 @@
 export default function bindExternalEvent(vm, targetEl, ...args) {
     targetEl.addEventListener(...args);
 
-    vm.$on('hook:destroyed', () => {
+    const unbind = () => {
         targetEl.removeEventListener(...args);
-    });
+    }
+
+    vm.$on('hook:destroyed', unbind);
+
+    return {
+        unbind,
+    };
 }
