@@ -11,9 +11,15 @@ function bindExternalEvent(vm, targetEl) {
   }
 
   targetEl.addEventListener.apply(targetEl, args);
-  vm.$on('hook:destroyed', function () {
+
+  var unbind = function unbind() {
     targetEl.removeEventListener.apply(targetEl, args);
-  });
+  };
+
+  vm.$on('hook:destroyed', unbind);
+  return {
+    unbind: unbind
+  };
 }
 
 /**
