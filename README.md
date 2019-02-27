@@ -14,17 +14,17 @@ Utility functions for Vue components.
 
 ### Installation
 
-The recommended way to install these utility functions is through a package manager.
+The recommended way to install these utility functions is through a Yarn or NPM.
 
 ```bash
-# install via npm
-$ npm install spyfu-vue-utils
-
-# or install via yarn
 $ yarn add spyfu-vue-utils
+
+# or
+
+$ npm install spyfu-vue-utils
 ```
 
-Additionally, the utility functions can be pulled in through a CDN.
+Additionally, the utilities can be served via a CDN.
 
 ```html
 <script src="https://raw.githubusercontent.com/spyfu/spyfu-vue-utils/master/dist/spyfu-vue-utils.min.js"></script>
@@ -32,17 +32,17 @@ Additionally, the utility functions can be pulled in through a CDN.
 
 ### bindExternalEvent
 
-Binds a listener to something outside the scope of a component. This listener will be cleaned up when the component is destroyed.
+Binds a listener to something outside the scope of a component. This listener will be cleaned up when the component is destroyed. In this example, we'll bind a listener to the window scroll event.
 
 ```js
 import { bindExternalEvent } from 'spyfu-vue-utils';
 
 new Vue({
     created() {
-        bindExternalEvent(this, window, 'scroll', this.onBodyClick);
+        bindExternalEvent(this, window, 'scroll', this.onScroll);
     },
     methods: {
-        onBodyClick(e) {
+        onScroll(e) {
             // ...
         },
     },
@@ -95,9 +95,9 @@ new Vue({
 });
 ```
 
-### Exposing utility functions globally
+### Plugin API
 
-To expose these helpers to all plugins, you can install them as a plugin.
+In addition to being able to import these utilities directly, they can be exposed to all Vue instances if you prefer. To do this, simply install them as a plugin.
 
 ```js
 import Vue from 'vue';
@@ -106,15 +106,15 @@ import { SpyfuVueUtils } from 'spyfu-vue-utils';
 Vue.use(SpyfuVueUtils);
 ```
 
-This will attach the helpers to the Vue prototype as `$bindExternalEvent`, `$interval`, and `$timeout`. The API for these functions will all remain the same, with the exception of not having to provide the `this` context as the first argument. As an example, here is `bindExternalEvent` being used to listen for a scroll event.
+This attaches the utilities to the Vue prototype as `$bindExternalEvent`, `$interval`, and `$timeout`. The API for these functions remains the same, with the exception of not having to provide a `this` context as the first argument. As an example, here is `bindExternalEvent` being used to listen for a body click event.
 
 ```js
 new Vue({
     created() {
-        this.$bindExternalEvent(window, 'scroll', this.onScroll);
+        this.$bindExternalEvent(document.body, 'click', this.onBodyClick);
     },
     methods: {
-        onScroll(e) {
+        onBodyClick(e) {
             // ...
         },
     },
