@@ -56,4 +56,20 @@ describe('componentEase', () => {
             done();
         }, 1100);
     });
+
+    it('cancels callbacks if component is destroyed', done => {
+        const fn = jest.fn();
+
+        new Vue({
+            created() {
+                componentEase(this, fn, 1000);
+                this.$destroy();
+            },
+        });
+
+        setTimeout(() => {
+            expect(fn.mock.calls.length).toEqual(0);
+            done();
+        }, 1100);
+    });
 });
