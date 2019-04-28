@@ -1,9 +1,11 @@
+import bezierEasing from 'bezier-easing';
+
 /**
  * Bind an event to an element outside the scope of a Vue component.
  *
  * @param {Vue}         vm          vue component managing the event
  * @param {HTMLElement} targetEl    html element to bind an event listener to
- * @param  {...any}     args        all other event arguments 
+ * @param {...any}      args        all other event arguments 
  */
 function bindExternalEvent(vm, targetEl) {
   for (var _len = arguments.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
@@ -22,25 +24,24 @@ function bindExternalEvent(vm, targetEl) {
   };
 }
 
-/**
- * Create an interval that is cleaned up when the component is destroyed.
- * 
- * @param  {Vue}        vm
- * @param  {Function}   callback
- * @param  {Number}     ms
- * @return {Function}
- */
-function componentInterval(vm, callback, ms) {
-  var interval = setInterval(callback, ms);
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+}
 
-  var cancel = function cancel() {
-    return clearInterval(interval);
-  };
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
 
-  vm.$once('hook:destroyed', cancel);
-  return {
-    cancel: cancel
-  };
+    return arr2;
+  }
+}
+
+function _iterableToArray(iter) {
+  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+}
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance");
 }
 
 var timeouts = [];
@@ -103,6 +104,68 @@ function componentTimeout(vm, callback, ms) {
   };
 }
 
+/**
+ * Create a component bound easing timeout.
+ * 
+ * @param  {Vue}            vm
+ * @param  {Function}       fn
+ * @param  {number}         ms
+ * @param  {Array<number>}  curve
+ * @param  {number}         steps
+ * @return {Function}
+ */
+
+function componentEase(vm, fn, ms) {
+  var curve = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [0.77, 0, 0.175, 1];
+  var steps = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
+  // calculate the easing curve, and create an array
+  // to hold all of the timeouts we're about make
+  var easing = bezierEasing.apply(void 0, _toConsumableArray(curve));
+  var frames = steps > 0 ? steps : 60 * (ms / 1000);
+  var timeouts = []; // queue up each frame of the animation
+
+  var _loop = function _loop(i, end) {
+    var frame = i / end;
+    timeouts.push(componentTimeout(vm, function () {
+      return fn(+easing(frame).toFixed(4), i);
+    }, frame * ms));
+  };
+
+  for (var i = 0, end = frames - 1; i <= end; i += 1) {
+    _loop(i, end);
+  } // and finally, return an object we can use to cancel the timeouts
+
+
+  return {
+    cancel: function cancel() {
+      return timeouts.forEach(function (timeout) {
+        return timeout.cancel();
+      });
+    }
+  };
+}
+
+/**
+ * Create an interval that is cleaned up when the component is destroyed.
+ * 
+ * @param  {Vue}        vm
+ * @param  {Function}   callback
+ * @param  {Number}     ms
+ * @return {Function}
+ */
+function componentInterval(vm, callback, ms) {
+  var interval = setInterval(callback, ms);
+
+  var cancel = function cancel() {
+    return clearInterval(interval);
+  };
+
+  vm.$once('hook:destroyed', cancel);
+  return {
+    cancel: cancel
+  };
+}
+
 var plugin = {
   install: function install(Vue) {
     Vue.prototype.$bindExternalEvent = function () {
@@ -113,17 +176,25 @@ var plugin = {
       return bindExternalEvent.apply(void 0, [this].concat(args));
     };
 
-    Vue.prototype.$interval = function () {
+    Vue.prototype.$ease = function () {
       for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
         args[_key2] = arguments[_key2];
+      }
+
+      return componentEase.apply(void 0, [this].concat(args));
+    };
+
+    Vue.prototype.$interval = function () {
+      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
       }
 
       return componentInterval.apply(void 0, [this].concat(args));
     };
 
     Vue.prototype.$timeout = function () {
-      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        args[_key3] = arguments[_key3];
+      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+        args[_key4] = arguments[_key4];
       }
 
       return componentTimeout.apply(void 0, [this].concat(args));
@@ -131,5 +202,5 @@ var plugin = {
   }
 };
 
-export { plugin as SpyfuVueUtils, bindExternalEvent, componentInterval, componentTimeout };
+export { plugin as SpyfuVueUtils, bindExternalEvent, componentEase, componentInterval, componentTimeout };
 //# sourceMappingURL=spyfu-vue-utils.esm.js.map
