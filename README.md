@@ -9,6 +9,7 @@
 Utility functions for Vue components.
 
 - [`bindExternalEvent`](#bindexternalevent)
+- [`componentEase`](#componentease)
 - [`componentInterval`](#componentinterval)
 - [`componentTimeout`](#componenttimeout)
 
@@ -63,6 +64,33 @@ new Vue({
     },
     methods: {
         onScroll(e) {
+            // ...
+        },
+    },
+});
+```
+
+### `componentEase`
+
+This utility fires a function along an easing curve. It is useful when transitioning state.
+
+```js
+import { componentEase } from 'spyfu-vue-utils';
+
+new Vue({
+    created() {
+        const duration = 1000;
+        const easeInOutQuart = [0.77, 0, 0.175, 1]; // optional, this is the default
+        const steps = 0; // optional, calculates to 60fps if zero
+
+        // queue timeouts
+        const timeouts = componentEase(this, this.fire, duration, easeInOutQuart, steps);
+        
+        // cancel execution
+        timeouts.cancel();
+    },
+    methods: {
+        fire(value) {
             // ...
         },
     },
