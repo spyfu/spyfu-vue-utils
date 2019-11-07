@@ -2,7 +2,7 @@
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('bezier-easing')) :
     typeof define === 'function' && define.amd ? define(['exports', 'bezier-easing'], factory) :
     (global = global || self, factory(global['spyfu-vue-utils'] = {}, global.bezierEasing));
-}(this, function (exports, bezierEasing) { 'use strict';
+}(this, (function (exports, bezierEasing) { 'use strict';
 
     bezierEasing = bezierEasing && bezierEasing.hasOwnProperty('default') ? bezierEasing['default'] : bezierEasing;
 
@@ -208,13 +208,27 @@
       }
     };
 
+    /**
+     * Wrap a render function as a functional component.
+     *
+     * @param  {Function<h>}    render
+     * @return {Object}
+     */
+    function functionalComponent(render) {
+      return {
+        functional: true,
+        render: render
+      };
+    }
+
     exports.SpyfuVueUtils = plugin;
     exports.bindExternalEvent = bindExternalEvent;
     exports.componentEase = componentEase;
     exports.componentInterval = componentInterval;
     exports.componentTimeout = componentTimeout;
+    exports.functionalComponent = functionalComponent;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));
 //# sourceMappingURL=spyfu-vue-utils.js.map

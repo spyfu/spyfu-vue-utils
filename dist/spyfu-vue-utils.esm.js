@@ -202,5 +202,18 @@ var plugin = {
   }
 };
 
-export { plugin as SpyfuVueUtils, bindExternalEvent, componentEase, componentInterval, componentTimeout };
+/**
+ * Wrap a render function as a functional component.
+ *
+ * @param  {Function<h>}    render
+ * @return {Object}
+ */
+function functionalComponent(render) {
+  return {
+    functional: true,
+    render: render
+  };
+}
+
+export { plugin as SpyfuVueUtils, bindExternalEvent, componentEase, componentInterval, componentTimeout, functionalComponent };
 //# sourceMappingURL=spyfu-vue-utils.esm.js.map
