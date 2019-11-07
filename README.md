@@ -12,6 +12,7 @@ Utility functions for Vue components.
 - [`componentEase`](#componentease)
 - [`componentInterval`](#componentinterval)
 - [`componentTimeout`](#componenttimeout)
+- [`functionalComponent`](#functionalcomponent)
 
 ### Installation
 
@@ -141,6 +142,20 @@ new Vue({
         },
     },
 });
+```
+
+### `functionalComponent`
+
+Wraps a plain render function as a functional component object. This can be useful when storing multiple components in a single file.
+
+> **Note:** Because this utility exists for use with functional components, it is not exposed via the plugin API.
+
+```js
+import { functionalComponent } from 'spyfu-vue-utils';
+
+const component = functionalComponent(() => <div>Hello from a functional component!</div>);
+
+new Vue(component);
 ```
 
 ### License
